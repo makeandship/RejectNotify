@@ -97,7 +97,12 @@ class ListCase implements CaseInterface
             return;
         }
         $post = get_post($pid);
-        $allowed = apply_filters(Launcher::SLUG.'_post_types', ['post']);
+        $types = get_post_types(array('public' => true, '_builtin' => false));
+        $allAllowedTypes = ['post','page'];
+        foreach ($types as $post_type_name) {
+            $allAllowedTypes[] = $post_type_name;
+        }
+        $allowed = apply_filters(Launcher::SLUG.'_post_types', $allAllowedTypes);
         if (!in_array($post->post_type, $allowed, true)) {
             return;
         }
