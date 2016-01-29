@@ -107,7 +107,12 @@ class Launcher
     {
         $id = -1;
         $screen = get_current_screen();
-        $allowedTypes = apply_filters(self::SLUG.'_post_types', ['post']);
+        $types = get_post_types(array('public' => true, '_builtin' => false));
+        $allAllowedTypes = ['post','page'];
+        foreach ($types as $post_type_name) {
+            $allAllowedTypes[] = $post_type_name;
+        }
+        $allowedTypes = apply_filters(self::SLUG.'_post_types', $allAllowedTypes);
         if (! empty($screen)) {
             $edit = strpos($screen->id, 'edit-') === 0;
             $id = $edit && strlen($screen->id) > 5 ? substr($screen->id, 5) : $screen->id;

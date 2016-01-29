@@ -59,7 +59,12 @@ class FormCase implements CaseInterface
     {
         $postId = filter_input(INPUT_GET, 'postid', FILTER_SANITIZE_NUMBER_INT);
         $post = $postId ? get_post($postId) : false;
-        $allowed = apply_filters(Launcher::SLUG.'_post_types', ['post']);
+        $types = get_post_types(array('public' => true, '_builtin' => false));
+        $allAllowedTypes = ['post','page'];
+        foreach ($types as $post_type_name) {
+            $allAllowedTypes[] = $post_type_name;
+        }
+        $allowed = apply_filters(Launcher::SLUG.'_post_types', $allAllowedTypes);
         if (
             ! $post instanceof WP_Post
             || $this->meta->has($post->ID, $post->post_author)
